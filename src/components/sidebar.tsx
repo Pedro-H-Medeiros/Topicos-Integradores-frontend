@@ -33,13 +33,15 @@ export default function Sidebar() {
   }
 
   return (
-    <div className="bg-[#F5F4FD] h-[calc(100vh-84px)] flex-1 max-w-64 w-1/5">
+    <div className="bg-[#F5F4FD] h-[calc(100vh-84px)] flex-1 max-w-64 w-1/5 sticky top-[84px]">
       <div className="flex h-full justify-between flex-col">
         <div className="mt-10 px-2 w-full overflow-hidden space-y-5 flex-1">
           {/* PROFILE */}
           <section className="flex w-full items-center gap-2">
             <div className="rounded-full bg-gradient-to-tr from-[#221ECA] to-[#6461DA] min-w-8 min-h-8 flex items-center justify-center">
-              <h1 className="font-bold text-white">K</h1>
+              <h1 className="font-bold text-white">
+                {profiledata && profiledata.userProfile.name[0]}
+              </h1>
             </div>
             <div className="truncate flex-1">
               {isLoadingProfile && (
@@ -60,22 +62,24 @@ export default function Sidebar() {
         <section className="bg-[#D5D4F5] rounded-sm">
           <div className="flex items-center p-3.5 space-x-3.5">
             <div className="rounded-full bg-gradient-to-tr from-[#221ECA] to-[#6461DA] min-w-8 min-h-8 flex items-center justify-center">
-              <h1 className="font-bold text-white">K</h1>
+              <h1 className="font-bold text-white">
+                {profiledata && profiledata.userProfile.name[0]}
+              </h1>
             </div>
             <div>
-              <p>
+              <div>
                 {isLoadingProfile && (
                   <Skeleton className="h-7 w-full bg-gray-200/75" />
                 )}
                 {profiledata && profiledata.userProfile.name}
-              </p>
+              </div>
               <p>CEO</p>
             </div>
 
             <button
               onClick={handleLogout}
               type="submit"
-              className="cursor-pointer hover:text-red-500"
+              className="cursor-pointer hover:text-red-700 text-red-500 flex-1 m-auto w-full flex justify-end-safe"
             >
               <SignOut size={24} />
             </button>

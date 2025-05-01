@@ -27,25 +27,32 @@ import { getAllTasks, getAllTasksResponse } from '@/services/get-all-tasks'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Plus } from '@phosphor-icons/react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { toast } from 'sonner'
+import { z } from 'zod'
 
 export default function TasksPage() {
   const queryClient = useQueryClient()
+  const router = useRouter()
+  const searchParams = useSearchParams()
+
+  const page = z.coerce.number().parse(searchParams.get('page') ?? '1')
 
   const { data: tasksResult, isLoading: isLoadingTasks } =
     useQuery<getAllTasksResponse>({
-      queryKey: ['all-tasks'],
-      queryFn: () => getAllTasks(),
+      queryKey: ['all-tasks', page],
+      queryFn: () => getAllTasks({ page }),
     })
 
   const { mutateAsync: createTaskFn, isPending: isPendingCreateTask } =
     useMutation({
       mutationKey: ['create-task'],
       mutationFn: createTask,
-      async onSuccess() {
+      onSuccess() {
         queryClient.invalidateQueries({
-          queryKey: ['profile', 'me', 'all-tasks'],
+          queryKey: ['all-tasks', page],
         })
       },
     })
@@ -70,6 +77,15 @@ export default function TasksPage() {
       toast.error(`Erro ao criar a tarefa ${getValues('title')}.`)
     }
   }
+
+  useEffect(() => {
+    if (!searchParams.has('page')) {
+      const setUrlParams = new URLSearchParams(searchParams.toString())
+      setUrlParams.set('page', page.toString())
+
+      router.push(`?${setUrlParams.toString()}`)
+    }
+  }, [searchParams, page])
 
   return (
     <main className="mt-10 mx-20 flex-1">
@@ -177,13 +193,7 @@ export default function TasksPage() {
             {isLoadingTasks && <TaskCardSkeleton />}
             {tasksResult &&
               tasksResult?.tasks.map((task) => (
-                <Task
-                  key={task.id}
-                  description={task.description}
-                  status={task.status}
-                  createdAt={task.createdAt}
-                  username={task.createdBy.name}
-                />
+                <Task key={task.id} task={task} />
               ))}
           </div>
         </TasksCard>

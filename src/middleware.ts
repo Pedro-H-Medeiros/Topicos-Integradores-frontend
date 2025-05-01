@@ -10,23 +10,19 @@ export async function middleware(request: NextRequest) {
     cookie.delete('sessionId')
   }
 
-  const publicRoutes = ['/auth/sign-in', '/auth/sign-up']
+  const privateRoutes = ['/tasks']
 
-  const isPublicRoute = publicRoutes.includes(request.nextUrl.pathname)
+  const isPrivateRoute = privateRoutes.includes(request.nextUrl.pathname)
 
   const isAuthPage =
     request.nextUrl.pathname === '/auth/sign-in' ||
     request.nextUrl.pathname === '/auth/sign-up'
 
   if (sessionToken && isAuthPage) {
-    return NextResponse.redirect(new URL('/', request.url))
+    return NextResponse.redirect(new URL('/tasks', request.url))
   }
 
-  if (isPublicRoute) {
-    return NextResponse.next()
-  }
-
-  if (!sessionToken) {
+  if (isPrivateRoute && !sessionToken) {
     return NextResponse.redirect(new URL('/auth/sign-in', request.url))
   }
 

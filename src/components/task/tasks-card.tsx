@@ -18,7 +18,7 @@ export default function TasksCard({
     >
       <h2 className={clsx('uppercase font-bold mb-4', titleColor)}>{title}</h2>
 
-      <div className="max-w-full w-full">{children}</div>
+      <div>{children}</div>
     </section>
   )
 }
