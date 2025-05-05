@@ -6,12 +6,24 @@ import TasksCard from '@/components/task/tasks-card'
 import { getExternalUserInfo } from '@/services/get-external-user-info'
 import { getExternalUserTask } from '@/services/get-external-user-task'
 import { useQuery } from '@tanstack/react-query'
-import { use } from 'react'
+import { use, useEffect } from 'react'
+import Cookies from 'js-cookie'
 
 type Params = Promise<{ accessToken: string }>
 
 export default function Page(props: { params: Params }) {
   const params = use(props.params)
+
+  useEffect(() => {
+    if (params.accessToken) {
+      Cookies.remove('accessToken')
+      Cookies.set('accessToken', params.accessToken, {
+        expires: 1, // 1 dia
+        secure: true,
+        sameSite: 'Strict',
+      })
+    }
+  }, [params.accessToken])
 
   const { data: getExternalTaskData, isLoading: isLoadingExternalTask } =
     useQuery({

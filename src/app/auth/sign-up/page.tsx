@@ -32,10 +32,10 @@ export default function SignUp() {
   async function handleSubmitForm(data: RegisterAdminSchema) {
     try {
       registerAdminFn({ ...data })
-      toast.success('Usuário Autenticado.')
-      router.push('/')
+      toast.success('Usuário criado.')
+      router.push('/auth/sign-in')
     } catch {
-      toast.error('Erro ao realizar login.')
+      toast.error('Erro ao criar usuário.')
     }
   }
 
