@@ -35,7 +35,7 @@ export default function SignIn() {
     try {
       await authenticateFn({ ...data })
       toast.success('Usuário Autenticado.')
-      router.replace('/')
+      router.replace('/tasks')
     } catch {
       toast.error('Erro ao realizar login.')
     }
