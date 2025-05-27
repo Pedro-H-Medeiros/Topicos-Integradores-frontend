@@ -31,9 +31,9 @@ export default function SignUp() {
 
   async function handleSubmitForm(data: RegisterAdminSchema) {
     try {
-      registerAdminFn({ ...data })
+      await registerAdminFn({ ...data })
       toast.success('Usuário criado.')
-      router.push('/auth/sign-in')
+      router.replace('/auth/sign-in')
     } catch {
       toast.error('Erro ao criar usuário.')
     }
