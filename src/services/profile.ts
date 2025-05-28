@@ -1,7 +1,7 @@
-'use server'
+'use client'
 
 import { api } from '@/lib/axios'
-import { cookies } from 'next/headers'
+// import { cookies } from 'next/headers'
 
 export interface profileResponse {
   userProfile: {
@@ -10,7 +10,8 @@ export interface profileResponse {
 }
 
 export async function profile() {
-  const token = (await cookies()).get('sessionId')?.value
+  // const token = (await cookies()).get('sessionId')?.value
+  const token = localStorage.getItem('sessionId')
 
   const response = await api.get<profileResponse>('/person/me', {
     headers: {

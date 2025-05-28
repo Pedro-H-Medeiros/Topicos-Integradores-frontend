@@ -7,6 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 
@@ -16,6 +17,9 @@ export default function SignIn() {
   const { mutateAsync: authenticateFn, isPending: isPendingAuthenticate } =
     useMutation({
       mutationFn: authenticate,
+      onSuccess(data) {
+        localStorage.setItem('sessionId', data.access_token)
+      },
     })
 
   const {
@@ -40,6 +44,13 @@ export default function SignIn() {
       toast.error('Erro ao realizar login.')
     }
   }
+
+  useEffect(() => {
+    const sessionId = localStorage.getItem('sessionId')
+    if (sessionId) {
+      router.replace('/tasks')
+    }
+  }, [])
 
   return (
     <main className="flex flex-col items-center min-w-[428px]">

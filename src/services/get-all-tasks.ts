@@ -1,7 +1,7 @@
-'use server'
+'use client'
 
 import { api } from '@/lib/axios'
-import { cookies } from 'next/headers'
+// import { cookies } from 'next/headers'
 
 interface getAllTasksQuery {
   page?: number | null
@@ -24,7 +24,8 @@ export interface getAllTasksResponse {
 }
 
 export async function getAllTasks({ page }: getAllTasksQuery) {
-  const token = (await cookies()).get('sessionId')?.value
+  // const token = (await cookies()).get('sessionId')?.value
+  const token = localStorage.getItem('sessionId')
 
   const response = await api.get<getAllTasksResponse>('/task', {
     params: { page },

@@ -1,7 +1,7 @@
-'use server'
+'use client'
 
 import { api } from '@/lib/axios'
-import { cookies } from 'next/headers'
+// import { cookies } from 'next/headers'
 
 interface assignTaskQuery {
   taskId: string
@@ -10,7 +10,8 @@ interface assignTaskQuery {
 }
 
 export async function assignTask({ taskId, name, email }: assignTaskQuery) {
-  const token = (await cookies()).get('sessionId')?.value
+  // const token = (await cookies()).get('sessionId')?.value
+  const token = localStorage.getItem('sessionId')
 
   const response = await api.put(
     `/task/${taskId}/assign`,
