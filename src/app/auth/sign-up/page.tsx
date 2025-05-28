@@ -40,14 +40,14 @@ export default function SignUp() {
   }
 
   return (
-    <main className="flex flex-col items-center min-w-[428px]">
+    <main className="flex flex-col items-center max-w-[428px]">
       <h1 className="md:text-4xl text-xl text-title mb-10">Cadastrar</h1>
       <form
         onSubmit={handleSubmit(handleSubmitForm)}
-        className="flex flex-col space-y-9"
+        className="flex flex-col gap-y-9"
       >
         <div className="w-full">
-          <label htmlFor="name" className="text-title text-base md:text-xl">
+          <label htmlFor="name" className="text-title text-sm md:text-xl">
             Nome:
           </label>
           <Input
@@ -58,27 +58,28 @@ export default function SignUp() {
             })}
           />
           {errors.name && (
-            <span className="text-sm text-red-500">{errors.name.message}</span>
+            <div className="text-sm text-red-500">{errors.name.message}</div>
           )}
         </div>
         <div>
-          <label htmlFor="email" className="text-title text-base md:text-xl">
+          <label htmlFor="email" className="text-title text-sm md:text-xl">
             E-mail:
           </label>
           <Input
             id="email"
             type="email"
+            autoComplete="off"
             placeholder="Digite seu e-mail"
             {...register('email', {
               required: true,
             })}
           />
           {errors.email && (
-            <span className="text-sm text-red-500">{errors.email.message}</span>
+            <div className="text-sm text-red-500">{errors.email.message}</div>
           )}
         </div>
         <div>
-          <label htmlFor="password" className="text-title text-base md:text-xl">
+          <label htmlFor="password" className="text-title text-sm md:text-xl">
             Senha:
           </label>
           <Input
@@ -90,9 +91,9 @@ export default function SignUp() {
             })}
           />
           {errors.password && (
-            <span className="text-sm text-red-500">
+            <div className="text-sm text-red-500">
               {errors.password.message}
-            </span>
+            </div>
           )}
         </div>
 
@@ -104,7 +105,7 @@ export default function SignUp() {
           {isPendingRegister ? 'Carregando...' : 'Entrar'}
         </button>
       </form>
-      <p className="text-title mt-8">
+      <p className="text-title mt-8 text-center">
         Ja possui conta?{' '}
         <Link href="/auth/sign-in" className="font-black">
           Login

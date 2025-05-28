@@ -12,7 +12,7 @@ import { useEffect, useState } from 'react'
 
 export default function Sidebar() {
   const router = useRouter()
-  const [isOpenMenu, setIsOpenMenu] = useState(true)
+  const [isOpenMenu, setIsOpenMenu] = useState(false)
 
   const { data: profiledata, isLoading: isLoadingProfile } = useQuery({
     queryKey: ['profile', 'me'],
@@ -43,9 +43,11 @@ export default function Sidebar() {
       }
     }
 
+    handleResize()
+
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
-  })
+  }, [])
 
   return (
     <>

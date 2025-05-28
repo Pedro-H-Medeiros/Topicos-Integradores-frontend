@@ -19,7 +19,6 @@ export async function updateTaskStatus({
   taskId,
   status,
 }: updateTaskStatusParams & UpdateTaskStatusSchema) {
-  console.log(taskId)
   const response = await api.put<updateTaskStatusResponse>(
     `/task/${taskId}/update-status`,
     {

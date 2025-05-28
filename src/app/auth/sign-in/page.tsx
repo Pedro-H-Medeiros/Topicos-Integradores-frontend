@@ -53,14 +53,14 @@ export default function SignIn() {
   }, [])
 
   return (
-    <main className="flex flex-col items-center min-w-[428px]">
+    <main className="flex flex-col items-center max-w-[428px]">
       <h1 className="md:text-4xl text-xl text-title mb-10">Login</h1>
       <form
         onSubmit={handleSubmit(handleSubmitForm)}
-        className="flex flex-col space-y-9"
+        className="flex flex-col gap-y-9"
       >
-        <div>
-          <label htmlFor="email" className="text-title text-base md:text-xl">
+        <div className="max-w-full">
+          <label htmlFor="email" className="text-title text-sm md:text-xl">
             E-mail:
           </label>
           <Input
@@ -72,11 +72,13 @@ export default function SignIn() {
             })}
           />
           {errors.email && (
-            <span className="text-sm text-red-500">{errors.email.message}</span>
+            <div className="text-sm text-red-500 w-full">
+              {errors.email.message}
+            </div>
           )}
         </div>
-        <div>
-          <label htmlFor="password" className="text-title text-base md:text-xl">
+        <div className="max-w-full">
+          <label htmlFor="password" className="text-title text-sm md:text-xl">
             Senha:
           </label>
           <Input
@@ -88,9 +90,9 @@ export default function SignIn() {
             })}
           />
           {errors.password && (
-            <span className="text-sm text-red-500">
+            <div className="text-sm text-red-500 w-full">
               {errors.password.message}
-            </span>
+            </div>
           )}
         </div>
 
@@ -102,7 +104,7 @@ export default function SignIn() {
           {isPendingAuthenticate ? 'Carregando...' : 'Entrar'}
         </button>
       </form>
-      <p className="text-title mt-8">
+      <p className="text-title mt-8 text-center">
         Ainda não tenho conta?{' '}
         <Link href="/auth/sign-up" className="font-black">
           Cadastrar
