@@ -22,7 +22,7 @@ export default function TasksCard({
         <div className="truncate w-full mr-4">Título</div>
         <div className="flex justify-end gap-10 items-center w-full">
           <div className="w-fit">Status</div>
-          <div className="w-[100px]">Data de Criação</div>
+          <div className="w-[100px] hidden md:flex">Data de Criação</div>
           <div className="w-[160px] hidden md:flex">Criado por</div>
         </div>
       </div>

@@ -120,7 +120,7 @@ export default function ExternalTask({ task, user }: TaskProps) {
               </div>
 
               {/* USERNAME */}
-              <div className="w-[100px] flex items-center gap-2">
+              <div className="w-[100px] items-center gap-2 hidden md:flex">
                 <div className="rounded-full bg-gradient-to-tr from-[#221ECA] to-[#6461DA] min-w-8 min-h-8 flex items-center justify-center">
                   <h1 className="font-bold text-white">{task.createdBy[0]}</h1>
                 </div>
