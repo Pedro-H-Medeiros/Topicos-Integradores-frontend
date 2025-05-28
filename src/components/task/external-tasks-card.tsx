@@ -23,7 +23,7 @@ export default function ExternalTasksCard({
         <div className="flex justify-end gap-10 items-center w-full">
           <div className="w-fit">Status</div>
           <div className="w-[100px]">Data de Criação</div>
-          <div className="w-[100px]">Criado por</div>
+          <div className="w-[100px] hidden md:flex">Criado por</div>
           <div className="w-[160px] hidden md:flex">Desiginado para</div>
         </div>
       </div>
