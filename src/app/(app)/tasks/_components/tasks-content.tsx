@@ -7,6 +7,7 @@ import TasksCard from '@/components/task/tasks-card'
 import {
   Dialog,
   DialogContent,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -88,7 +89,7 @@ export default function TasksContent() {
   }, [searchParams, page])
 
   return (
-    <main className="mt-10 mx-20 flex-1">
+    <main className="md:pt-10 md:px-20 p-7 flex-1">
       <div className="flex justify-between">
         <div className="space-y-1">
           <h1 className="font-bold text-lg md:text-2xl text-neutral-primary">
@@ -98,98 +99,91 @@ export default function TasksContent() {
             Lorem ipsum dolor sit amet consectetur adipisicing elit.
           </p>
         </div>
-        {/* <button className="font-medium flex items-center justify-center gap-2 text-white text-xs bg-branding-primary-500 py-2.5 px-4 rounded-full cursor-pointer ">
-          <Plus size={20} />
-          Adicionar Tarefa
-        </button> */}
+        <Dialog>
+          <DialogTrigger asChild>
+            <button className="flex items-center justify-center gap-2 text-support-link-500 text-xs cursor-pointer ">
+              <Plus size={24} />
+              Adicionar nova tarefa
+            </button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Adicionar nova tarefa</DialogTitle>
+            </DialogHeader>
+            <form onSubmit={handleSubmit(handleSubmitTask)}>
+              <div className="space-y-4">
+                <div>
+                  <Input
+                    placeholder="Adicione um título para a tarefa"
+                    {...register('title', { required: true })}
+                  />
+                  {errors.title && (
+                    <span className="text-sm text-red-500">
+                      {errors.title.message}
+                    </span>
+                  )}
+                </div>
+
+                <div>
+                  <Input
+                    placeholder="Adicione uma descrição para a tarefa"
+                    {...register('description', { required: true })}
+                  />
+                  {errors.description && (
+                    <span className="text-sm text-red-500">
+                      {errors.description.message}
+                    </span>
+                  )}
+                </div>
+
+                <div>
+                  <Controller
+                    control={control}
+                    name="status"
+                    rules={{
+                      required: true,
+                    }}
+                    render={({ field }) => (
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecione um satus" />
+                        </SelectTrigger>
+                        <SelectContent ref={field.ref}>
+                          <SelectItem value="TODO">A fazer</SelectItem>
+                          <SelectItem value="IN_PROGRESS">Fazendo</SelectItem>
+                          <SelectItem value="COMPLETED">Concluído</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
+                  {errors.status && (
+                    <span className="text-sm text-red-500">
+                      {errors.status.message}
+                    </span>
+                  )}
+                </div>
+
+                <DialogFooter className="justify-end">
+                  <button
+                    disabled={isSubmitting}
+                    type="submit"
+                    className={`px-4 py-2 rounded-md font-medium transition-colors ${isSubmitting ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#221ECA] hover:bg-[#1b18a6]'} text-white shadow disabled:opacity-70`}
+                  >
+                    {isPendingCreateTask ? 'Carregando...' : 'Criar'}
+                  </button>
+                </DialogFooter>
+              </div>
+            </form>
+          </DialogContent>
+        </Dialog>
       </div>
 
       <div className="mt-3.5 space-y-14 ">
         <TasksCard title="tarefa">
           <div className="space-y-4.5">
-            <Dialog>
-              <DialogTrigger asChild>
-                <button className="flex items-center justify-center gap-2 text-support-link-500 text-xs cursor-pointer ">
-                  <Plus size={24} />
-                  Adicionar nova tarefa
-                </button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Adicionar nova tarefa</DialogTitle>
-                </DialogHeader>
-                <form onSubmit={handleSubmit(handleSubmitTask)}>
-                  <div className="space-y-4">
-                    <div>
-                      <Input
-                        placeholder="Adicione um título para a tarefa"
-                        {...register('title', { required: true })}
-                      />
-                      {errors.title && (
-                        <span className="text-sm text-red-500">
-                          {errors.title.message}
-                        </span>
-                      )}
-                    </div>
-
-                    <div>
-                      <Input
-                        placeholder="Adicione uma descrição para a tarefa"
-                        {...register('description', { required: true })}
-                      />
-                      {errors.description && (
-                        <span className="text-sm text-red-500">
-                          {errors.description.message}
-                        </span>
-                      )}
-                    </div>
-
-                    <div>
-                      <Controller
-                        control={control}
-                        name="status"
-                        rules={{
-                          required: true,
-                        }}
-                        render={({ field }) => (
-                          <Select
-                            onValueChange={field.onChange}
-                            value={field.value}
-                          >
-                            <SelectTrigger>
-                              <SelectValue placeholder="Selecione um satus" />
-                            </SelectTrigger>
-                            <SelectContent ref={field.ref}>
-                              <SelectItem value="TODO">A fazer</SelectItem>
-                              <SelectItem value="IN_PROGRESS">
-                                Fazendo
-                              </SelectItem>
-                              <SelectItem value="COMPLETED">
-                                Concluído
-                              </SelectItem>
-                            </SelectContent>
-                          </Select>
-                        )}
-                      />
-                      {errors.status && (
-                        <span className="text-sm text-red-500">
-                          {errors.status.message}
-                        </span>
-                      )}
-                    </div>
-
-                    <button
-                      disabled={isSubmitting}
-                      type="submit"
-                      className="cursor-pointer"
-                    >
-                      {isPendingCreateTask ? 'Carregando...' : 'Criar'}
-                    </button>
-                  </div>
-                </form>
-              </DialogContent>
-            </Dialog>
-
             {isLoadingTasks && <TaskCardSkeleton />}
             {tasksResult &&
               tasksResult?.tasks.map((task) => (
@@ -201,9 +195,7 @@ export default function TasksContent() {
         <TasksCard
           title="task em atraso"
           titleColor="text-branding-secondary-500"
-        >
-          ok
-        </TasksCard>
+        ></TasksCard>
       </div>
     </main>
   )

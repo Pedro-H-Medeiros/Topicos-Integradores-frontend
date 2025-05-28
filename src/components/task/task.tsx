@@ -8,6 +8,7 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -18,6 +19,7 @@ import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
 import { assignTask } from '@/services/assign-task'
+import { toast } from 'sonner'
 
 interface TaskProps {
   task: {
@@ -57,6 +59,7 @@ export default function Task({ task }: TaskProps) {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
+    reset,
   } = useForm<AssignTaskSchema>({
     resolver: zodResolver(assignTaskSchema),
   })
@@ -68,7 +71,11 @@ export default function Task({ task }: TaskProps) {
         name,
         email,
       })
-    } catch {}
+      reset()
+      toast.success('Atividade atribuída com sucesso ao colaborador!')
+    } catch {
+      toast.error('Erro ao atribuir atividade ao colaborador.')
+    }
   }
 
   return (
@@ -103,7 +110,7 @@ export default function Task({ task }: TaskProps) {
               </div>
 
               {/* USERNAME */}
-              <div className="w-[160px] flex items-center gap-2">
+              <div className="w-[160px] items-center gap-2 hidden md:flex">
                 <div className="rounded-full bg-gradient-to-tr from-[#221ECA] to-[#6461DA] min-w-8 min-h-8 flex items-center justify-center">
                   <h1 className="font-bold text-white">
                     {task.createdBy.name[0]}
@@ -117,7 +124,7 @@ export default function Task({ task }: TaskProps) {
           </div>
         </DialogTrigger>
         <DialogContent>
-          <DialogHeader>
+          <DialogHeader className="text-left">
             <DialogTitle>
               <div className="truncate max-w-[27rem]">{task.title}</div>
             </DialogTitle>
@@ -152,9 +159,15 @@ export default function Task({ task }: TaskProps) {
                   </span>
                 )}
               </div>
-              <button disabled={isSubmitting} type="submit">
-                {isPendingAssignTask ? 'Enviando...' : 'Atribuir'}
-              </button>
+              <DialogFooter className="justify-end">
+                <button
+                  disabled={isSubmitting}
+                  type="submit"
+                  className={`px-4 py-2 cursor-pointer rounded-md font-medium transition-colors ${isSubmitting ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#221ECA] hover:bg-[#1b18a6]'} text-white shadow disabled:opacity-70`}
+                >
+                  {isPendingAssignTask ? 'Enviando...' : 'Atribuir'}
+                </button>
+              </DialogFooter>
             </form>
           </div>
         </DialogContent>

@@ -8,10 +8,29 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from '../ui/dialog'
+import { zodResolver } from '@hookform/resolvers/zod'
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from '@/components/ui/select'
+import { useForm, Controller } from 'react-hook-form'
+import {
+  UpdateTaskStatusSchema,
+  updateTaskStatusSchema,
+} from '@/schemas/update-task-status.chema'
+import { updateTaskStatus } from '@/services/update-task-status'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { toast } from 'sonner'
+import { useState } from 'react'
+import { Spinner } from '@phosphor-icons/react'
 
 interface TaskProps {
   task: {
@@ -30,9 +49,48 @@ interface TaskProps {
 }
 
 export default function ExternalTask({ task, user }: TaskProps) {
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const queryClient = useQueryClient()
+
+  const {
+    mutateAsync: updateTaskStatusFn,
+    isPending: isPendingUpdateTaskStatus,
+  } = useMutation({
+    mutationKey: ['update-task'],
+    mutationFn: updateTaskStatus,
+    onSuccess() {
+      queryClient.invalidateQueries({
+        queryKey: ['external-task'],
+      })
+    },
+  })
+
+  const {
+    control,
+    formState: { isSubmitting, errors },
+  } = useForm<UpdateTaskStatusSchema>({
+    resolver: zodResolver(updateTaskStatusSchema),
+  })
+
+  async function handleUpdateStatusTask({ status }: UpdateTaskStatusSchema) {
+    try {
+      await updateTaskStatusFn({ taskId: task.id, status })
+      toast.success(`Status autalizado para ${status}.`)
+    } catch {
+      toast.error('Erro ao atualizar status da task.')
+    }
+  }
+
   return (
     <section className="rounded-2xl hover:bg-neutral-background hover:shadow-hover-task transition-all cursor-pointer">
-      <Dialog>
+      <Dialog
+        open={isDialogOpen}
+        onOpenChange={(open) => {
+          if (!isSubmitting) {
+            setIsDialogOpen(open)
+          }
+        }}
+      >
         <DialogTrigger asChild>
           <div className="py-[18px] px-3 grid grid-flow-col items-center gap-3">
             {/* TITLE */}
@@ -71,7 +129,7 @@ export default function ExternalTask({ task, user }: TaskProps) {
                 </span>
               </div>
 
-              <div className="truncate w-[160px] text-xs text-neutral-primary">
+              <div className="truncate w-[160px] text-xs text-neutral-primary hidden md:flex">
                 {user.name}
               </div>
             </div>
@@ -82,9 +140,61 @@ export default function ExternalTask({ task, user }: TaskProps) {
             <DialogTitle>
               <div className="truncate max-w-[27rem]">{task.title}</div>
             </DialogTitle>
-            <DialogDescription>{task.description}</DialogDescription>
+            <DialogDescription>Abaixo estão suas orientações</DialogDescription>
           </DialogHeader>
-          <div>Minha task</div>
+          <div>{task.description}</div>
+
+          <hr className="w-full h-1" />
+          <div className="flex gap-4 items-center">
+            <p> Modifique o status da sua tarefa:</p>
+            <div>
+              <Controller
+                control={control}
+                name="status"
+                rules={{
+                  required: true,
+                }}
+                render={({ field }) => (
+                  <Select
+                    onValueChange={async (value) => {
+                      const typedValue = value as
+                        | 'TODO'
+                        | 'IN_PROGRESS'
+                        | 'COMPLETED'
+
+                      if (value !== task.status) {
+                        field.onChange(value)
+                        await handleUpdateStatusTask({ status: typedValue })
+                      }
+                    }}
+                    value={field.value}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecione um satus" />
+                    </SelectTrigger>
+                    <SelectContent ref={field.ref}>
+                      <SelectItem value="TODO">A fazer</SelectItem>
+                      <SelectItem value="IN_PROGRESS">Fazendo</SelectItem>
+                      <SelectItem value="COMPLETED">Concluído</SelectItem>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+              {errors.status && (
+                <span className="text-sm text-red-500">
+                  {errors.status.message}
+                </span>
+              )}
+            </div>
+          </div>
+          <DialogFooter>
+            {isPendingUpdateTaskStatus && (
+              <div className="flex items-center gap-2">
+                <Spinner className="animate-spin" />
+                Atualizando...
+              </div>
+            )}
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </section>

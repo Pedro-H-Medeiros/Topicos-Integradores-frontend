@@ -2,12 +2,12 @@
 
 import ExternalTask from '@/components/task/external-task'
 import TaskCardSkeleton from '@/components/task/task-card-skeleton'
-import TasksCard from '@/components/task/tasks-card'
 import { getExternalUserInfo } from '@/services/get-external-user-info'
 import { getExternalUserTask } from '@/services/get-external-user-task'
 import { useQuery } from '@tanstack/react-query'
 import { use, useEffect } from 'react'
 import Cookies from 'js-cookie'
+import ExternalTasksCard from '@/components/task/external-tasks-card'
 
 type Params = Promise<{ accessToken: string }>
 
@@ -38,7 +38,7 @@ export default function Page(props: { params: Params }) {
 
   return (
     <div>
-      <TasksCard title="tarefa">
+      <ExternalTasksCard title="tarefa">
         <div className="space-y-4.5">
           {isLoadingExternalTask && <TaskCardSkeleton />}
           {getExternalTaskData &&
@@ -53,7 +53,7 @@ export default function Page(props: { params: Params }) {
                 ),
             )}
         </div>
-      </TasksCard>
+      </ExternalTasksCard>
     </div>
   )
 }
