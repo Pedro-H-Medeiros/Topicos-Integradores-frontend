@@ -170,7 +170,7 @@ export default function ExternalTask({ task, user }: TaskProps) {
                     value={field.value}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Selecione um satus" />
+                      <SelectValue placeholder="Selecione um status" />
                     </SelectTrigger>
                     <SelectContent ref={field.ref}>
                       <SelectItem value="TODO">A fazer</SelectItem>

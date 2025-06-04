@@ -149,7 +149,7 @@ export default function TasksContent() {
                         value={field.value}
                       >
                         <SelectTrigger>
-                          <SelectValue placeholder="Selecione um satus" />
+                          <SelectValue placeholder="Selecione um status" />
                         </SelectTrigger>
                         <SelectContent ref={field.ref}>
                           <SelectItem value="TODO">A fazer</SelectItem>
